@@ -1,0 +1,50 @@
+import numpy as np    #pip install numpy
+import os
+import pathlib
+import tensorflow as tf     #pip install tensorflow
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
+import random
+import cv2    #pip install opencv-python
+from tqdm import tqdm   #pip install tqdm
+
+datasetDir = r'' #put the directory that the pictures will be in 
+categories = ['normal', 'opacity'] # This should be the name of the file directories that the pictures are in
+trainingData = []
+def createTrainingData():
+    for category in categories:
+        path = os.path.join(datasetDir, category)
+        classNum = categories.index(category)
+        print(classNum)
+        i = 0
+        for img in tqdm(os.listdir(path)):
+            if i == 50:
+                break
+            try:
+                imgArray = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)
+                trainingData.append([imgArray, classNum])
+                i += 1
+            except Exception as e:
+                pass
+
+createTrainingData()
+print(len(trainingData))
+random.shuffle(trainingData)
+x = []
+y = [] 
+print('shuffled')
+for features, label in trainingData:
+    x.append(features)
+    y.append(label)
+print('two arrays') 
+x = np.array(x).reshape(-1, 2890, 2890, 1)
+print('resized array')
+f = open('x50.npy', 'wb')
+np.save(f, x)
+f.close()
+f = open('y50.npy', 'wb')
+np.save(f, y)
+f.close()
+print('saved')
