@@ -22,21 +22,21 @@ f.close()
 x = x/255
 
 model = Sequential()
-model.add(Conv2D(8, (3,3), input_shape = x.shape[1:]))
+model.add(Conv2D(5, (3,3), input_shape = x.shape[1:]))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
 
-model.add(Conv2D(8, (3,3)))
+model.add(Conv2D(5, (3,3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
 
 model.add(Flatten())
 
-model.add(Dense(8))
+model.add(Dense(5))
 model.add(Activation('relu'))
 
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(x, y, batch_size=5, epochs=3,  validation_split=0.2)
+model.fit(x, y, batch_size=5, epochs=10,  validation_split=0.2)
