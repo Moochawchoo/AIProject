@@ -19,24 +19,19 @@ f.close()
 f = open('y50.npy', 'rb')
 y = np.load(f)
 f.close()
-x = x/255
 
 model = Sequential()
-model.add(Conv2D(5, (3,3), input_shape = x.shape[1:]))#edit first value of Conv2d if having memory problems make it lower
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2,2)))
-
-model.add(Conv2D(5, (3,3)))#edit first value of Conv2d if having memory problems make it lower
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2,2)))
-
+model.add(Dense(16, input_shape=x.shape[1:], activation='relu'))
+model.add(Dropout(0.4))
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.6))
+model.add(Flatten())
+model.add(Dense(2, activation='softmax'))
 model.add(Flatten())
 
-model.add(Dense(5))#You can also lower this value if having memory problems
-model.add(Activation('relu'))
-
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(x, y, batch_size=5, epochs=10,  validation_split=0.2)#lower batch size if having memory problems
+
+model.fit(x, y, batch_size=5, epochs=20, validation_split=0.2)
+model.predict(x)
+model.save('model2.h5')
